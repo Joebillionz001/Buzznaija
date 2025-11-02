@@ -63,7 +63,7 @@ def post_detail(request, pk):
         'related_posts': related_posts,
         'current_category': post.category,
         'meta_title': f"{post.title} - BuzzNaija",
-        'meta_description': post.short_description or post.content|truncatewords:25,
+        'meta_description': post.short_description or ' '.join(post.content.split()[:25]),
     }
     return render(request, 'news/post_detail.html', context)
 
