@@ -1,0 +1,72 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Full Article Content -->
+        <article>
+            <h1>{{ post.title }}</h1>
+            <p class="text-muted">
+                Published on: {{ post.published_at|date:"F j, Y, g:i a" }} | <i class="bi bi-eye-fill"></i> {{
+                post.view_count }} Views
+            </p>
+
+            {% if post.image_url %}
+            <img src="{{ post.image_url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
+            {% endif %}
+
+            <!-- The 'safe' filter renders HTML content from the database. -->
+            <!-- Use with caution if you don't trust the source of the content. -->
+            <div class="article-content">
+                {{ post.content|safe }}
+            </div>
+        </article>
+
+        <hr class="my-4">
+
+        <!-- Comment Section -->
+        <section>
+            <h3>Leave a Comment</h3>
+            <form method="POST">
+                {% csrf_token %} <!-- Important for security -->
+                <div class="mb-3">
+                    <label for="author" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="author" name="author" required>
+                </div>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Your Comment</label>
+                    <textarea class="form-control" id="body" name="body" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-buzz">Submit Comment</button>
+            </form>
+
+            <h4 class="mt-5">Comments ({{ comments.count }})</h4>
+            {% for comment in comments %}
+            <div class="card bg-light my-3">
+                <div class="card-body">
+                    <strong>{{ comment.author }}</strong>
+                    <span class="text-muted small"> on {{ comment.created_at|date:"M d, Y" }}</span>
+                    <p class="mt-2 mb-0">{{ comment.body }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+        </section>
+    </div>
+
+    <!-- Sidebar for Related Posts -->
+    <div class="col-md-4">
+        <div class="p-3 rounded bg-light">
+            <h4>Related Posts</h4>
+            <ul class="list-unstyled mb-0">
+                {% for related_post in related_posts %}
+                <li><a href="{% url 'post_detail' related_post.pk %}">{{ related_post.title|truncatechars:50 }}</a></li>
+                {% empty %}
+                <li>No related posts found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
