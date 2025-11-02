@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sitemaps', # Add sitemaps app
     'django.contrib.staticfiles',
     'news', # Add our news app
 ]
