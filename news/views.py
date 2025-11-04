@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Comment, NewsletterSubscriber
+from .models import Post, Comment, NewsletterSubscriber, CATEGORY_CHOICES
 from django.db.models import Q, Count, F
 from django.core.paginator import Paginator
 from django.utils import timezone
@@ -26,12 +26,16 @@ def homepage(request):
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)
 
+    # Get categories for the navbar
+    categories = [category[0] for category in CATEGORY_CHOICES]
+
     # For the sidebar and navbar
     one_week_ago = timezone.now() - timezone.timedelta(days=7)
     trending_posts = Post.objects.filter(published_at__gte=one_week_ago).order_by('-view_count', '-published_at')[:5]
 
     context = {
         'posts': posts,
+        'categories': categories,
         'trending_posts': trending_posts,
         'current_category': category,
     }
@@ -57,10 +61,14 @@ def post_detail(request, pk):
             # Re-fetch comments to show the new one immediately
             comments = post.comments.all().order_by('-created_at')
     
+    # Get categories for the navbar
+    categories = [category[0] for category in CATEGORY_CHOICES]
+
     context = {
         'post': post,
         'comments': comments,
         'related_posts': related_posts,
+        'categories': categories,
         'current_category': post.category,
         'meta_title': f"{post.title} - BuzzNaija",
         'meta_description': post.short_description or ' '.join(post.content.split()[:25]),

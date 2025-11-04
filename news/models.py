@@ -1,12 +1,21 @@
 from django.db import models
 
+CATEGORY_CHOICES = [
+    ('Entertainment', 'Entertainment'),
+    ('Sports', 'Sports'),
+    ('Politics', 'Politics'),
+    ('Business', 'Business'),
+    ('Technology', 'Technology'),
+    ('World', 'World'),
+]
+
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     short_description = models.TextField(blank=True)
     image_url = models.URLField(max_length=500, blank=True, null=True)
-    post_url = models.URLField(max_length=500, unique=True) # To avoid duplicate posts
-    category = models.CharField(max_length=50, default='News')
+    post_url = models.URLField(max_length=500, unique=True)  # To avoid duplicate posts
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Entertainment')
     published_at = models.DateTimeField()
     view_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

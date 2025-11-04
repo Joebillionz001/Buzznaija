@@ -131,12 +131,18 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link {% if not current_category %}active{% endif %}"
-                            href="{% url 'homepage' %}">All</a></li>
+                            href="{% url 'homepage' %}">All News</a></li>
+                    {% if categories %}
                     {% for category_item in categories %}
                     <li class="nav-item"><a class="nav-link {% if current_category == category_item %}active{% endif %}"
                             href="{% url 'homepage' %}?category={{ category_item }}">{{ category_item }}</a></li>
                     {% endfor %}
+                    {% endif %}
                 </ul>
+                <!-- Support Us Button -->
+                <a href="#" class="btn btn-buzz btn-sm me-3" data-bs-toggle="modal" data-bs-target="#supportModal">
+                    <i class="bi bi-heart-fill"></i> Support Us
+                </a>
                 <!-- Search Bar -->
                 <form class="d-flex" action="{% url 'homepage' %}" method="get">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search news..."
@@ -151,23 +157,10 @@
                             class="bi bi-moon-stars-fill"></i></label>
                 </form>
             </div>
-        </div>
-    </nav>
+        </div> <!-- /.container -->
+    </nav> <!-- /.navbar -->
 
-    <main class="container my-4">
-        {% block content %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-        {% endif %}
-        <!-- Page content goes here -->
-        {% endblock %}
-    </main>
-
+    <!-- MAIN CONTENT: Moved outside of the navbar -->
     <!-- Support Us Modal -->
     <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -211,6 +204,21 @@
         </div>
     </div>
 
+    <main class="container my-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        <!-- Page content from other templates will be inserted here -->
+        {% endblock %}
+    </main>
+
     <!-- Footer -->
     <footer class="footer mt-auto py-3">
         <div class="container text-center">
@@ -225,7 +233,6 @@
                         class="bi bi-tiktok"></i></a>
             </div>
             <div class="mb-2">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#supportModal" class="text-white">Support Us</a> |
                 <a href="#" class="text-white">About</a> | <a href="#" class="text-white">Contact</a>
             </div>
             <p class="mb-0 small">
